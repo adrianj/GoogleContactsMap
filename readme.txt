@@ -12,5 +12,6 @@ Yes, I know that the google maps website already allows for this sort of thing, 
 Dependencies:
 Google Maps API Wrapper for .NET : http://code.google.com/p/google-maps/
 Google Contacts Data API : http://code.google.com/apis/contacts/docs/3.0/developers_guide.html
+CSV Helper : http://www.codeproject.com/KB/cs/CsvReaderAndWriter.aspx
 
 For convenience, I've included working dlls into the repo.
