@@ -18,6 +18,7 @@ namespace GoogleContactsMap.GUI
 	{
 		ContactList addresses = new ContactList();
 		public ContactList Addresses { get { return addresses; } set { addresses = value; } }
+		ContactsViewForm contactsView = new ContactsViewForm();
 
 		public MainForm()
 		{
@@ -26,18 +27,23 @@ namespace GoogleContactsMap.GUI
 
 		private void MainForm_Shown(object sender, EventArgs e)
 		{
+			comboBoxList1.DataSource = new List<object>(new string[] { "" });
 			comboBoxList1.AddRow();
+
+			CreateTestingAddresses();
+
 			Login();
 		}
 
 		void Login()
 		{
-			string username = SettingsManager.PreviousEmailAddress;
-			Addresses = LoginForm.LoginAndGetAddressList(Addresses, username);
+			LoginForm form = new LoginForm();
+			if (form.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+				return;
+			Addresses = form.Addresses;
 
 			UpdateConnectionLabel();
 			UpdateSources();
-			SettingsManager.PreviousEmailAddress = Addresses.Username;
 		}
 
 		void UpdateConnectionLabel()
@@ -62,6 +68,9 @@ namespace GoogleContactsMap.GUI
 		private void comboBoxList1_SelectedValueChanged(object sender, EventArgs e)
 		{
 			UpdateNumberOfRows();
+			ContactList contacts = GetContactSequence();
+			MapRoute route = new MapRoute();
+			UpdateMapLink(route.CreateURL(contacts));
 		}
 
 		void UpdateNumberOfRows()
@@ -104,20 +113,51 @@ namespace GoogleContactsMap.GUI
 			SetWaitState(true, "Calculating Route...");
 			try
 			{
+				ContactList contacts = GetContactSequence();
 				MapRoute route = new MapRoute();
-				foreach (string name in comboBoxList1.SelectedValues)
-				{
-					Contact con = Addresses.Find(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-					if (con == null) continue;
-					route.Add(con);
-				}
-				route.CalculateRoute();
+				route.CalculateRoute(contacts);
 				distBox.Text = route.Distance.ToString("F1");
-				mapLink.Text = route.MapURL;
-				mapLink.Tag = route.MapURL;
+				UpdateMapLink(route.MapURL);
+				AddRouteToTable(route);
 			}
 			catch (Exception ex) { MessageBox.Show("" + ex); }
 			SetWaitState(false);
+		}
+
+		private void UpdateMapLink(string url)
+		{
+			mapLink.Text = url;
+			mapLink.Tag = url;
+		}
+
+		void AddRouteToTable(MapRoute route)
+		{
+			if (route.NamesVisited.Count < 2) return;
+			string names = route.NamesVisited[0];
+			for (int i = 1; i < route.NamesVisited.Count; i++)
+				names += "-" + route.NamesVisited[i];
+			ListViewItem lvi = new ListViewItem(new string[] { names, "" + route.Distance, "" + route.MapURL });
+			lvi.Name = names;
+			ListViewItem [] lvis = visitedView.Items.Find(names, false);
+			if (lvis == null || lvis.Length < 1)
+				visitedView.Items.Add(lvi);
+			DataSet.RoutesRow row = dataSet.Routes.NewRoutesRow();
+			row.Distance = route.Distance;
+			row.Route = names;
+			row.Link = route.MapURL;
+			dataSet.Routes.AddRoutesRow(row);
+		}
+
+		private ContactList GetContactSequence()
+		{
+			ContactList contacts = new ContactList();
+			foreach (string name in comboBoxList1.SelectedValues)
+			{
+				Contact con = Addresses.Find(p => p.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+				if (con == null) continue;
+				contacts.Add(con);
+			}
+			return contacts;
 		}
 
 		void CreateTestingAddresses()
@@ -125,6 +165,7 @@ namespace GoogleContactsMap.GUI
 			Addresses.Add(new Contact() { Name = "Adrian", Address = "1/11 Kawerau Ave, Devonport, Auckland 0624" });
 			Addresses.Add(new Contact() { Name = "Pranav", Address = "16 Balmain Road, Auckland" });
 			Addresses.Add(new Contact() { Name = "Home", Address = "1/11 Kawerau Ave, Auckland" });
+			UpdateSources();
 		}
 
 		void SetWaitState(bool isWaiting) { SetWaitState(isWaiting, "Calculate Route"); }
@@ -139,6 +180,72 @@ namespace GoogleContactsMap.GUI
 			{
 				this.Cursor = Cursors.Default;
 			}
+		}
+
+		private void MainForm_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Alt && e.KeyCode == Keys.C)
+				UpdateRoute();
+		}
+
+		private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+		{
+			int col = dataSet.Routes.Columns.IndexOf(dataSet.Routes.LinkColumn);
+			if (e.RowIndex >= 0 && e.ColumnIndex == col)
+				System.Diagnostics.Process.Start(dataSet.Routes[e.RowIndex].Link);
+		}
+
+		private void openButton_Click(object sender, EventArgs e)
+		{
+			loadContacts();
+		}
+
+		private void saveButton_Click(object sender, EventArgs e)
+		{
+			saveContacts();
+		}
+
+		void loadContacts()
+		{
+			OpenFileDialog dlg = new OpenFileDialog();
+			dlg.Filter = "CSV Files|*.csv|All Files|*.*";
+			if (dlg.ShowDialog() != DialogResult.OK) return;
+			Contacts.ContactsDatabaseManager mgr = new ContactsDatabaseManager();
+			mgr.LoadDatabase(dataSet.Routes, dlg.FileName);
+		}
+
+		void saveContacts()
+		{
+			SaveFileDialog dlg = new SaveFileDialog();
+			dlg.Filter = "CSV Files|*.csv|All Files|*.*";
+			if (dlg.ShowDialog() != DialogResult.OK) return;
+			Contacts.ContactsDatabaseManager mgr = new ContactsDatabaseManager();
+			mgr.SaveDatabase(dataSet.Routes, dlg.FileName);
+		}
+
+		private void dataGridView1_DataSourceChanged(object sender, EventArgs e)
+		{
+			MessageBox.Show("setting data source " + dataSet + ", " + dataGridView1.DataSource);
+		}
+
+		private void MainForm_Load(object sender, EventArgs e)
+		{
+			Program.Data = this.dataSet;
+		}
+
+		private void viewButton_Click(object sender, EventArgs e)
+		{
+			showContacts();
+		}
+
+		void showContacts()
+		{
+			if (contactsView == null)
+			{
+				contactsView = new ContactsViewForm();
+				contactsView.FormClosing += (o, e) => { e.Cancel = true; contactsView.Hide(); };
+			}
+			contactsView.Show();
 		}
 	}
 }

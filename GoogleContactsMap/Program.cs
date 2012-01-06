@@ -7,6 +7,8 @@ namespace GoogleContactsMap
 {
 	static class Program
 	{
+		public static DataSet Data = new DataSet();
+
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>

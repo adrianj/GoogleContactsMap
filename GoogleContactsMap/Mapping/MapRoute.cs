@@ -11,43 +11,45 @@ using GoogleMapsApi.Entities.Common;
 
 namespace GoogleContactsMap.Mapping
 {
-	public class MapRoute : Contacts.ContactList
+	public class MapRoute
 	{
 		public double Distance { get; set; }
 		public string MapURL { get; set; }
+		public List<string> NamesVisited { get; set; }
 
-		public void CalculateRoute()
+		public MapRoute()
 		{
 			Distance = 0;
-			MapURL = "http://maps.google.com/"; 
-			FilterEmptyNames();
+			MapURL = "http://maps.google.com/";
+			NamesVisited = new List<string>();
+		}
 
-			if (this.Count == 0)
+		public void CalculateRoute(Contacts.ContactList contacts)
+		{
+			Distance = 0;
+			contacts = FilterEmptyNames(contacts);
+			MapURL = CreateURL(contacts);
+
+			if (contacts.Count == 0)
 				return;
 
+			NamesVisited.Clear();
+			foreach (Contacts.Contact con in contacts)
+				NamesVisited.Add(con.Name);
+
 			DirectionsRequest req = new DirectionsRequest();
-			req.Origin = this[0].Address;
-			req.Destination = this[this.Count - 1].Address;
+			req.Origin = contacts[0].Address;
+			req.Destination = contacts[contacts.Count - 1].Address;
 
-			MapURL += "?saddr=" + req.Origin;
-			MapURL += "&daddr=";
-
-			foreach (Contacts.Contact c in this)
-			{
-				Console.WriteLine("" + c.Name + ", " + c.Address);
-			}
-
-			if (this.Count > 2)
+			if (contacts.Count > 2)
 			{
 				List<string> waypoints = new List<string>();
-				for (int i = 1; i < this.Count - 1; i++)
+				for (int i = 1; i < contacts.Count - 1; i++)
 				{
-					MapURL += this[i].Address+"+to:";
-					waypoints.Add(this[i].Address);
+					waypoints.Add(contacts[i].Address);
 				}
 				req.Waypoints = waypoints.ToArray();
 			}
-			MapURL += req.Destination;
 			double dist = 0;
 			List<Location> locations = new List<Location>();
 			
@@ -66,18 +68,34 @@ namespace GoogleContactsMap.Mapping
 
 			}
 			Distance = dist / 1000;
-			MapURL = MapURL.Replace(Environment.NewLine, ",");
-			MapURL = MapURL.Replace("\n", ",");
-			MapURL = MapURL.Replace("\r", "");
+		}
 
-			Console.WriteLine("" + MapURL);
+		public string CreateURL(Contacts.ContactList contacts)
+		{
+			contacts = FilterEmptyNames(contacts);
+			MapURL = "http://maps.google.com/";
+			if (contacts.Count == 0)
+				return MapURL;
+			MapURL += "?saddr=" + contacts[0].Address;
+			MapURL += "&daddr=";
+			if (contacts.Count > 2)
+			{
+				for (int i = 1; i < contacts.Count - 1; i++)
+				{
+					MapURL += contacts[i].Address + "+to:";
+				}
+			}
+			MapURL += contacts[contacts.Count - 1].Address;
+			MapURL = MapURL.Replace("\n", ",");
+			return MapURL;
 		}
 
 
-		private void FilterEmptyNames()
+		private Contacts.ContactList FilterEmptyNames(Contacts.ContactList contacts)
 		{
-
-			this.RemoveAll(p => string.IsNullOrWhiteSpace(p.Name));
+			Contacts.ContactList ret = new Contacts.ContactList(contacts);
+			ret.RemoveAll(p => string.IsNullOrWhiteSpace(p.Name));
+			return ret;
 		}
 
 	}

@@ -33,18 +33,10 @@ namespace GoogleContactsMap.GUI
 				this.Close();
 			}
 			catch (NotImplementedException ex) { MessageBox.Show("" + ex); }
+			PreviousAddressManager.StoreAddress(Username);
 			SetWaitState(false);
 		}
 
-		public static ContactList LoginAndGetAddressList(ContactList previousList, string initialUsername)
-		{
-			LoginForm form = new LoginForm();
-			form.Username = initialUsername;
-			if (form.ShowDialog() == DialogResult.OK)
-				return form.Addresses;
-			else
-				return previousList;
-		}
 
 		private void cancelButton_Click(object sender, EventArgs e)
 		{
@@ -54,6 +46,10 @@ namespace GoogleContactsMap.GUI
 
 		private void LoginForm_Shown(object sender, EventArgs e)
 		{
+			addressBox.Items.Clear();
+			addressBox.Items.AddRange(PreviousAddressManager.ReadPreviousAddresses());
+			if (addressBox.Items.Count > 0)
+				Username = addressBox.Items[0] as string;
 			if (!string.IsNullOrWhiteSpace(Username))
 				passwordBox.Focus();
 		}

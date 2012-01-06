@@ -17,6 +17,11 @@ namespace GoogleContactsMap.Contacts
 			this.Reset();
 		}
 
+		public ContactList(IEnumerable<Contact> clone) : base(clone)
+		{
+
+		}
+
 		public void AddFromFeed(ContactsFeed feed)
 		{
 			foreach (ContactEntry en in feed.Entries)

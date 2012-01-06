@@ -32,9 +32,9 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.passwordBox = new System.Windows.Forms.TextBox();
-			this.addressBox = new System.Windows.Forms.TextBox();
 			this.submitButton = new System.Windows.Forms.Button();
 			this.cancelButton = new System.Windows.Forms.Button();
+			this.addressBox = new System.Windows.Forms.ComboBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -47,9 +47,9 @@
 			this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.passwordBox, 1, 1);
-			this.tableLayoutPanel1.Controls.Add(this.addressBox, 1, 0);
 			this.tableLayoutPanel1.Controls.Add(this.submitButton, 0, 2);
 			this.tableLayoutPanel1.Controls.Add(this.cancelButton, 2, 2);
+			this.tableLayoutPanel1.Controls.Add(this.addressBox, 1, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -90,15 +90,6 @@
 			this.passwordBox.Size = new System.Drawing.Size(189, 20);
 			this.passwordBox.TabIndex = 1;
 			// 
-			// addressBox
-			// 
-			this.addressBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-			this.tableLayoutPanel1.SetColumnSpan(this.addressBox, 2);
-			this.addressBox.Location = new System.Drawing.Point(100, 5);
-			this.addressBox.Name = "addressBox";
-			this.addressBox.Size = new System.Drawing.Size(189, 20);
-			this.addressBox.TabIndex = 0;
-			// 
 			// submitButton
 			// 
 			this.submitButton.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -121,6 +112,18 @@
 			this.cancelButton.Text = "Cancel";
 			this.cancelButton.UseVisualStyleBackColor = true;
 			this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+			// 
+			// addressBox
+			// 
+			this.addressBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+			this.addressBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+			this.addressBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+			this.tableLayoutPanel1.SetColumnSpan(this.addressBox, 2);
+			this.addressBox.FormattingEnabled = true;
+			this.addressBox.Location = new System.Drawing.Point(100, 4);
+			this.addressBox.Name = "addressBox";
+			this.addressBox.Size = new System.Drawing.Size(189, 21);
+			this.addressBox.TabIndex = 10;
 			// 
 			// LoginForm
 			// 
@@ -148,8 +151,8 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox passwordBox;
-		private System.Windows.Forms.TextBox addressBox;
 		private System.Windows.Forms.Button submitButton;
 		private System.Windows.Forms.Button cancelButton;
+		private System.Windows.Forms.ComboBox addressBox;
 	}
 }
