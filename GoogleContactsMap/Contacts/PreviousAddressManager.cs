@@ -11,6 +11,16 @@ namespace GoogleContactsMap.Contacts
 	{
 		public static int MaxAddressesToStore = 5;
 
+        public static string ContactsFile
+        {
+            get { return GoogleContactsMap.Properties.Settings.Default.ContactsFilename; }
+            set
+            {
+                GoogleContactsMap.Properties.Settings.Default.ContactsFilename = value;
+                GoogleContactsMap.Properties.Settings.Default.Save();
+            }
+        }
+
 		public static void StoreAddress(string address)
 		{
 			List<string> list = StringCollectionToList(GoogleContactsMap.Properties.Settings.Default.PreviousEmailAddresses);

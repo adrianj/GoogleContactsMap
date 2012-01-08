@@ -46,5 +46,17 @@ namespace GoogleContactsMap.Properties {
                 return ((string)(this["dbConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ContactsFilename {
+            get {
+                return ((string)(this["ContactsFilename"]));
+            }
+            set {
+                this["ContactsFilename"] = value;
+            }
+        }
     }
 }

@@ -10,7 +10,16 @@ namespace GoogleContactsMap.Contacts
 {
 	public class ContactsDatabaseManager
 	{
-		public void SaveDatabase(DataTable data, string destFile)
+        public void LoadDatabaseFromContactList(DataSet.ContactsDataTable data, ContactList list)
+        {
+            data.Clear();
+            foreach (Contact con in list)
+            {
+                data.AddContactsRow(con.Name, con.Address);
+            }
+        }
+
+		public void SaveDatabaseToFile(DataTable data, string destFile)
 		{
 			CsvFile file = new CsvFile();
 			foreach (DataColumn col in data.Columns)
@@ -29,7 +38,7 @@ namespace GoogleContactsMap.Contacts
 			}
 		}
 
-		public void LoadDatabase(DataTable data, string srcFile)
+		public void LoadDatabaseFromFile(DataTable data, string srcFile)
 		{
 			using (CsvReader reader = new CsvReader(srcFile))
 			{

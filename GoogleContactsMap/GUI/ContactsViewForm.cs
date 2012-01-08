@@ -11,6 +11,9 @@ namespace GoogleContactsMap.GUI
 {
 	public partial class ContactsViewForm : Form
 	{
+        public object DataSource { get { return this.dataGridView1.DataSource; } set { this.dataGridView1.DataSource = value; } }
+
+
 		public ContactsViewForm()
 		{
 			InitializeComponent();

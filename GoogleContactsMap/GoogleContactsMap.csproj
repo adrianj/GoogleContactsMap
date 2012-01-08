@@ -72,23 +72,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ElencySolutions.CsvHelper">
-      <HintPath>..\..\..\Libraries\CsvHelper\CsvHelper\bin\Debug\ElencySolutions.CsvHelper.dll</HintPath>
+      <HintPath>..\Dependencies\ElencySolutions.CsvHelper.dll</HintPath>
     </Reference>
     <Reference Include="Google.GData.Client, Version=1.9.0.0, Culture=neutral, PublicKeyToken=04a59ca9b0273830, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Google\Google Data API SDK\Redist\Google.GData.Client.dll</HintPath>
+      <HintPath>..\Dependencies\Google.GData.Client.dll</HintPath>
     </Reference>
     <Reference Include="Google.GData.Contacts, Version=1.9.0.0, Culture=neutral, PublicKeyToken=7e065189dd4b982f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Google\Google Data API SDK\Redist\Google.GData.Contacts.dll</HintPath>
+      <HintPath>..\Dependencies\Google.GData.Contacts.dll</HintPath>
     </Reference>
     <Reference Include="Google.GData.Extensions, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0b4c5df2ebf20876, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Google\Google Data API SDK\Redist\Google.GData.Extensions.dll</HintPath>
+      <HintPath>..\Dependencies\Google.GData.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="GoogleMapsApi, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Google\Google Data API SDK\Redist\GoogleMapsApi.dll</HintPath>
+      <HintPath>..\Dependencies\GoogleMapsApi.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
