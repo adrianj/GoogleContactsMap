@@ -49,7 +49,7 @@ namespace GoogleContactsMap.Contacts
 				while (reader.ReadNextRecord())
 				{
 					DataRow row = data.NewRow();
-					for (int i = 0; i < data.Columns.Count; i++ )
+					for (int i = 0; i < Math.Min(data.Columns.Count, reader.Fields.Count); i++ )
 						row[i] = reader.Fields[i];
 					data.Rows.Add(row);
 				}

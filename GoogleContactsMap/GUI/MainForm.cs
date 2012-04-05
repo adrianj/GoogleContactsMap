@@ -118,7 +118,8 @@ namespace GoogleContactsMap.GUI
 		{
 			if (route.NamesVisited.Count < 2) return;
             string names = GetRouteName(route);
-			
+            DataSet.RoutesRow existing = dataSet.Routes.FindByRoute(names);
+            if (existing != null) return;
 			DataSet.RoutesRow row = dataSet.Routes.NewRoutesRow();
 			row.Distance = route.Distance;
 			row.Route = names;
@@ -254,7 +255,7 @@ namespace GoogleContactsMap.GUI
 
 		private void dataGridView1_DataSourceChanged(object sender, EventArgs e)
 		{
-			MessageBox.Show("setting data source " + dataSet + ", " + dataGridView1.DataSource);
+			//MessageBox.Show("setting data source " + dataSet + ", " + dataGridView1.DataSource);
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
@@ -280,7 +281,7 @@ namespace GoogleContactsMap.GUI
 
         private void dataBindingSource_AddingNew(object sender, AddingNewEventArgs e)
         {
-            MessageBox.Show("Add new data: " + e.NewObject);
+            //MessageBox.Show("Add new data: " + e.NewObject);
         }
 
 
